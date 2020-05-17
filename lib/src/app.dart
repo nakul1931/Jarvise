@@ -21,9 +21,7 @@ class PlatformApp extends StatelessWidget {
       );
     } else {
       return MaterialApp(
-        onGenerateRoute: Routes.materialPageRoute,
-        home: LoginPage(),
-      );
+          onGenerateRoute: Routes.materialPageRoute, home: LoginPage());
     }
   }
 }
