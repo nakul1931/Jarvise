@@ -1,10 +1,12 @@
+import 'dart:async';
+
+import 'package:Jarvise/src/screens/loading_screen.dart';
 import 'package:Jarvise/src/style/colors.dart';
-import 'package:Jarvise/src/utils/shared_pref.dart';
+
 import 'package:Jarvise/src/widgets/form_card.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -64,16 +66,19 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Image.asset(
-                        "assets/logo.png",
-                        width: ScreenUtil.getInstance().setWidth(110),
-                        height: ScreenUtil.getInstance().setHeight(110),
+                      Hero(
+                        tag: "logo",
+                        child: Image.asset(
+                          "assets/logo.png",
+                          width: ScreenUtil.getInstance().setWidth(110),
+                          height: ScreenUtil.getInstance().setHeight(110),
+                        ),
                       ),
-                      Text("  Jar-Vise",
+                      Text(" Jar-Vise",
                           style: TextStyle(
                               fontFamily: "Poppins-Bold",
                               fontSize: ScreenUtil.getInstance().setSp(46),
-                              letterSpacing: .6,
+                              letterSpacing: .3,
                               fontWeight: FontWeight.bold))
                     ],
                   ),
@@ -123,7 +128,9 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                StoreData.setData(true);
+                                Timer(Duration(milliseconds: 500), () {
+                                  showMyDialog(context);
+                                });
                               },
                               child: Center(
                                 child: Text("Sign In",

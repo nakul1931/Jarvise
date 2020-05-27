@@ -1,5 +1,6 @@
 import 'package:Jarvise/src/screens/home_page.dart';
 import 'package:Jarvise/src/screens/settings.dart';
+import 'package:Jarvise/src/style/colors.dart';
 import 'package:Jarvise/src/style/text.dart';
 import 'package:flutter/material.dart';
 
@@ -16,53 +17,40 @@ class _DrawerControllerAppState extends State<DrawerControllerApp> {
   Widget child;
   @override
   Widget build(BuildContext context) {
-    print("+++++IN DRAWER++++++");
-    print("Index in Drawer is $_selectedIndex");
-    switch (_selectedIndex) {
-      case 0:
-        child = HomePage();
-        break;
-      case 2:
-        child = SettingsPage();
-        break;
-      default:
-        child = HomePage();
-    }
+
+    // switch (_selectedIndex) {
+    //   case 0:
+    //     child = HomePage();
+    //     break;
+    //   case 2:
+    //     child = SettingsPage();
+    //     break;
+    //   default:
+    //     child = HomePage();
+    // }
 
     return Scaffold(
-      body: Center(child: child),
-      bottomNavigationBar: NeumorphicToggle(
-        height: 50.0,
-        selectedIndex: _selectedIndex,
-        displayForegroundOnlyIfSelected: true,
-        children: [
-          ToggleElement(
-            foreground:
-                navBarChild(isSelected: true, title: "home", icon: Icons.home),
-            background:
-                navBarChild(isSelected: false, title: "home", icon: Icons.home),
-          ),
-          ToggleElement(
-            foreground:
-                navBarChild(isSelected: true, title: "jars", icon: Icons.home),
-            background:
-                navBarChild(isSelected: false, title: "jars", icon: Icons.home),
-          ),
-          ToggleElement(
-            foreground: navBarChild(
-                isSelected: true, title: "cards", icon: Icons.credit_card),
-            background: navBarChild(
-                isSelected: false, title: "cards", icon: Icons.credit_card),
-          ),
-        ],
-        thumb: null,
-        onChanged: (value) {
-          setState(() {
-            _selectedIndex = value;
-          });
-        },
-      ),
-    );
+        body: Center(
+          child: Text("d"),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppColors.logoPrimaryColor,
+          selectedIconTheme: IconThemeData(color: AppColors.logoPrimaryColor),
+          unselectedItemColor: Colors.black,
+          onTap: (value) {
+            print(value);
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+          ],
+        ));
   }
 
   Widget navBarChild(

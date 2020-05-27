@@ -7,4 +7,7 @@ class AppColors {
   static Color get headingTextColor => Color(0xFFcf7500);
   static Color get logoPrimaryColor => Color(0xFFF9C900);
   static Color get logoSecondaryColor => Color(0xFF252525);
+  static Color get white => Colors.white;
+  static Color get darkGrey => Colors.grey;
+  static Color get black => Colors.black;
 }
