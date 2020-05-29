@@ -7,6 +7,7 @@ class ImageContainer extends StatelessWidget {
         height: 50.0,
         width: 50.0,
         decoration: BoxDecoration(
+          color: Colors.white,
           border: Border.all(width: 1.0),
           borderRadius: BorderRadius.all(
             Radius.circular(10),

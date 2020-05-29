@@ -11,8 +11,8 @@ class TextStyles {
       fontWeight: FontWeight.w800,
       fontSize: 35,
       color: AppColors.headingTextColor);
-  static TextStyle get t1Text => TextStyle(
-      fontWeight: FontWeight.w800, fontSize: 20, color: AppColors.h1TextColor);
+  static TextStyle get t1Text =>
+      TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: Colors.white);
 
   static TextStyle get amount => GoogleFonts.roboto(
       textStyle: TextStyle(

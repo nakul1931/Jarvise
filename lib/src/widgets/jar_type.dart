@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class JarTypeContainer extends StatelessWidget {
-  final JarModel data;
-
-  const JarTypeContainer({this.data});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,11 +14,11 @@ class JarTypeContainer extends StatelessWidget {
         itemCount: DataMap.jarData.length,
         itemBuilder: (BuildContext context, int index) {
           if (DataMap.jarData[index]["selected"]) {
-            return typeContainer(DataMap.jarData[index]["title"], Colors.black,
-                Colors.white, index);
-          } else {
             return typeContainer(DataMap.jarData[index]["title"], Colors.white,
                 Colors.black, index);
+          } else {
+            return typeContainer(DataMap.jarData[index]["title"], Colors.black,
+                Colors.white, index);
           }
         },
       ),

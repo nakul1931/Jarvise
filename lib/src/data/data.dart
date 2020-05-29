@@ -7,13 +7,22 @@ class DataMap {
         },
         {
           "id": 1,
-          "title": "grocery",
-          "selected": true,
+          "title": "savings",
+          "selected": false,
         },
         {
           "id": 2,
           "title": "food",
-          "selected": false, 
+          "selected": false,
+        },
+        {
+          "id": 3,
+          "title": "lock",
+          "selected": false,
         }
       ];
+  static List<Map<String,dynamic>> get specificJarData =>[
+
+  ];
+
 }

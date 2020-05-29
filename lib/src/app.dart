@@ -3,7 +3,7 @@ import 'package:Jarvise/src/screens/add_card.dart';
 import 'package:Jarvise/src/screens/drawer_controlling.dart';
 import 'package:Jarvise/src/screens/home_page.dart';
 import 'package:Jarvise/src/screens/jar_page.dart';
-// import 'package:Jarvise/src/screens/drawer_controlling.dart';
+import 'package:Jarvise/src/screens/drawer_controlling.dart';
 import 'package:Jarvise/src/screens/login_page.dart';
 import 'package:Jarvise/src/utils/shared_pref.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +35,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return login
-        ? (PlatformApp(page: !status ? JarPage() : DrawerControllerApp()))
+        ? (PlatformApp(page: !status ? DrawerControllerApp(): DrawerControllerApp()))
         : MaterialApp(
             home: Scaffold(
                 body: Center(child: Lottie.asset("assets/start.json"))));
