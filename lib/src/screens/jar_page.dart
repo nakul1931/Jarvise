@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:Jarvise/src/data/data.dart';
 import 'package:Jarvise/src/models/jarModel.dart';
+import 'package:Jarvise/src/screens/loading_screen.dart';
 import 'package:Jarvise/src/style/base.dart';
 import 'package:Jarvise/src/style/colors.dart';
 import 'package:Jarvise/src/style/text.dart';
@@ -8,6 +12,7 @@ import 'package:Jarvise/src/widgets/avail_balance.dart';
 import 'package:Jarvise/src/widgets/homeButton.dart';
 import 'package:Jarvise/src/widgets/image_container.dart';
 import 'package:Jarvise/src/widgets/jar_type.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +24,53 @@ class JarPage extends StatefulWidget {
 
 class _JarPageState extends State<JarPage> {
   List data = DataMap.jarData;
+  List moneyData = DataMap.specificJarData;
+  List totalBalance = DataMap.totalBalance;
   int selectedIndex = 0;
+  String toAdd;
+  Timer time;
+
+  @override
+  void initState() {
+    super.initState();
+    getMoney();
+    time = Timer.periodic(Duration(seconds: 3), (Timer timer) => getMoney());
+  }
+
+  @override
+  void dispose() {
+    time?.cancel();
+    super.dispose();
+  }
+
+  void getMoney() {
+    http.get("https://jarvise-api.azurewebsites.net/pool").then((value) {
+      String body = value.body;
+      print(body);
+      if (moneyData[0]["balance"] != jsonDecode(body)["pool"]) {
+        print(jsonDecode(body)["pool"]);
+
+        moneyData[0]["balance"] = jsonDecode(body)["pool"];
+        setState(() {});
+      }
+    });
+  }
+
+  void addMoney() async {
+    print("Pool Post Request");
+    print(json.encode({"pool": int.parse(toAdd)}));
+    var toSend = json.encode({"pool": int.parse(toAdd)});
+    await http.post(
+      "https://jarvise-api.azurewebsites.net/pool",
+      body: toSend,
+      headers: {"Content-Type": "application/json"},
+    ).then((value) => value.statusCode);
+  }
 
   @override
   Widget build(BuildContext contextt) {
     print("==================Rebuild Done====================");
-    print(data);
+
     if (PlatformCheck.isIOS) {
       return CupertinoPageScaffold(
         child: ChangeNotifierProvider<JarModel>(
@@ -96,7 +142,9 @@ class _JarPageState extends State<JarPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 13.0, bottom: 0.0),
-                      child: Balance(),
+                      child: Balance(
+                        balance: totalBalance[1]["totalBalance"],
+                      ),
                     ),
                   ],
                 ),
@@ -118,7 +166,7 @@ class _JarPageState extends State<JarPage> {
                                 BorderRadius.all(Radius.circular(20.0))),
                         child: RaisedButton(
                           child: Text(
-                            "add money",
+                            "add jar",
                             style: TextStyles.t1Text,
                           ),
                           onPressed: () => {},
@@ -162,20 +210,7 @@ class _JarPageState extends State<JarPage> {
                       child: Container(
                           margin: EdgeInsets.all(10.0),
                           width: MediaQuery.of(context).size.width,
-                          // color: Colors.black,
                           child: Stack(children: <Widget>[
-                            // Expanded(
-                            //   child: Container(
-                            //       width: MediaQuery.of(context).size.width,
-                            //       margin: EdgeInsets.only(top: 70.0),
-                            //       decoration: BoxDecoration(
-                            //           color: Colors.white,
-                            //           borderRadius: BorderRadius.all(
-                            //               Radius.circular(30.0))),
-                            //       child: Column(
-                            //         children: <Widget>[],
-                            //       )),
-                            // ),
                             Positioned(
                               top: 10.0,
                               child: Image(
@@ -183,7 +218,6 @@ class _JarPageState extends State<JarPage> {
                                 image: AssetImage("assets/sticky.png"),
                               ),
                             ),
-
                             Positioned(
                               top: 10.0,
                               bottom: 250.0,
@@ -202,7 +236,16 @@ class _JarPageState extends State<JarPage> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Balance(),
+                                  Balance(
+                                    balance: moneyData[selectedIndex]
+                                        ["balance"],
+                                  ),
+                                  moneyData[selectedIndex]["title"] == "lock"
+                                      ? Center(
+                                          child: jarStackButton(
+                                              title: "lock", onTap: () {}),
+                                        )
+                                      : Container(),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
@@ -212,8 +255,153 @@ class _JarPageState extends State<JarPage> {
                                         SizedBox(
                                           width: 10.0,
                                         ),
-                                        jarStackButton(title: "add money"),
-                                        jarStackButton(title: "info"),
+                                        jarStackButton(
+                                            title: "add money",
+                                            onTap: () {
+                                              showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      actionsPadding:
+                                                          EdgeInsets.only(
+                                                              right: 10.0,
+                                                              bottom: 10.0),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      20.0))),
+                                                      title:
+                                                          Text("Enter Amount"),
+                                                      content: Container(
+                                                        height: 100.0,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        20.0))),
+                                                        child: TextField(
+                                                          onChanged:
+                                                              (String value) {
+                                                            toAdd = value;
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                      width:
+                                                                          2.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        ButtonTheme(
+                                                          minWidth: 80.0,
+                                                          height: 50.0,
+                                                          buttonColor: AppColors
+                                                              .logoPrimaryColor,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          20.0))),
+                                                          child: RaisedButton(
+                                                            child: Text(
+                                                              "Add money",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            onPressed: () {
+                                                              if (toAdd !=
+                                                                  null) {
+                                                                int bal =
+                                                                    int.parse(
+                                                                        toAdd);
+                                                                print(toAdd);
+                                                                if (totalBalance[1]
+                                                                            [
+                                                                            "totalBalance"] -
+                                                                        bal <
+                                                                    0) {
+                                                                  // showDialog(
+                                                                  //   context:
+                                                                  //       context,
+                                                                  //   builder:
+                                                                  //       (context) {
+                                                                  //     return AlertDialog(
+                                                                  //       title: Text(
+                                                                  //           "low balance"),
+                                                                  //     );
+                                                                  //   },
+                                                                  // );
+                                                                  print(
+                                                                      "Low balance");
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        return AlertDialog(
+                                                                          title:
+                                                                              Text("Low Balance"),
+                                                                          actions: <
+                                                                              Widget>[
+                                                                            FlatButton(
+                                                                                child: Text("ok"),
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                }),
+                                                                          ],
+                                                                        );
+                                                                      });
+                                                                } else {
+                                                                  setState(() {
+                                                                    moneyData[
+                                                                            selectedIndex]
+                                                                        [
+                                                                        "balance"] = moneyData[selectedIndex]
+                                                                            [
+                                                                            "balance"] +
+                                                                        bal;
+                                                                    totalBalance[
+                                                                            1][
+                                                                        "totalBalance"] = totalBalance[1]
+                                                                            [
+                                                                            "totalBalance"] -
+                                                                        bal;
+                                                                  });
+
+                                                                  if (moneyData[
+                                                                              selectedIndex]
+                                                                          [
+                                                                          "title"] ==
+                                                                      "pool") {
+                                                                    addMoney();
+                                                                  }
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }
+                                                              }
+                                                            },
+                                                          ),
+                                                        )
+                                                      ],
+                                                    );
+                                                  });
+                                            }),
+                                        jarStackButton(
+                                            title: "info", onTap: null),
                                       ],
                                     ),
                                   ),
@@ -230,7 +418,7 @@ class _JarPageState extends State<JarPage> {
     );
   }
 
-  Widget jarStackButton({@required String title}) {
+  Widget jarStackButton({@required String title, @required Function onTap}) {
     return ButtonTheme(
       buttonColor: AppColors.logoPrimaryColor,
       minWidth: 100.0,
@@ -238,7 +426,7 @@ class _JarPageState extends State<JarPage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: RaisedButton(
-        onPressed: () {},
+        onPressed: onTap,
         child: Text(
           title,
           style: TextStyle(

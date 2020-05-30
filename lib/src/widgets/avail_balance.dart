@@ -2,6 +2,9 @@ import 'package:Jarvise/src/style/text.dart';
 import 'package:flutter/material.dart';
 
 class Balance extends StatelessWidget {
+  final int balance;
+
+  const Balance({@required this.balance});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -9,7 +12,7 @@ class Balance extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "₹ 2576",
+          "₹ ${balance.toString()}",
           style: TextStyles.amount,
         ),
         SizedBox(height: 5.0),

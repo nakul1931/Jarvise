@@ -128,9 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                Timer(Duration(milliseconds: 500), () {
-                                  showMyDialog(context);
-                                });
+                                // Timer(Duration(milliseconds: 500), () {
+                                //   showMyDialog(context);
+
+                                // });
+                                Navigator.pushNamed(context, "/drawer");
                               },
                               child: Center(
                                 child: Text("Sign In",

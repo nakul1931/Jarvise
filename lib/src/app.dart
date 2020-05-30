@@ -35,7 +35,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return login
-        ? (PlatformApp(page: !status ? DrawerControllerApp(): DrawerControllerApp()))
+        ? (PlatformApp(page: !status ? LoginPage() : DrawerControllerApp()))
         : MaterialApp(
             home: Scaffold(
                 body: Center(child: Lottie.asset("assets/start.json"))));
@@ -55,7 +55,10 @@ class PlatformApp extends StatelessWidget {
         home: page,
       );
     } else {
-      return MaterialApp(onGenerateRoute: Routes.materialPageRoute, home: page);
+      return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: Routes.materialPageRoute,
+          home: page);
     }
   }
 }

@@ -21,8 +21,35 @@ class DataMap {
           "selected": false,
         }
       ];
-  static List<Map<String,dynamic>> get specificJarData =>[
-
-  ];
+  static List<Map<String, dynamic>> get specificJarData => [
+        {
+          "id": 0,
+          "title": "pool",
+          "balance": 0,
+        },
+        {
+          "id": 1,
+          "title": "savings",
+          "balance": 150,
+        },
+        {
+          "id": 2,
+          "title": "food",
+          "balance": 700,
+        },
+        {
+          "id": 3,
+          "title": "lock",
+          "balance": 1200,
+        },
+      ];
+  static List get totalBalance => [
+        {
+          "totalBalance": 2400,
+        },
+        {
+          "totalBalance": 2000,
+        }
+      ];
 
 }
